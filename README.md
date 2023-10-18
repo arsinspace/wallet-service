@@ -9,12 +9,12 @@ The service helps in creating a user with wallet (default balance = 0.0), credit
 - Clone this repo:
 ```bash
 > gh repo clone arsinspace/wallet-service
-> cd Wallet-Service
+> cd WalletService
+> For migration DB use - mvn liquibase:update
 ```
 - Install Maven.
 - Update the dependencies given in the `pom.xml` using Maven.
 - Run WalletServiceApplication.java in the IDE.
-
 # Sample API end points:
 ```
 Register new User. Create user will automatically 

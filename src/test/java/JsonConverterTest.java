@@ -2,7 +2,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.ylab.model.Credentials;
 import ru.ylab.model.User;
-import ru.ylab.tools.JsonConverter;
+import ru.ylab.utils.JsonConverter;
 
 /**
  * Tests for JsonConverter

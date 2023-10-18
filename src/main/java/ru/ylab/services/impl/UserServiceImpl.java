@@ -1,14 +1,15 @@
 package ru.ylab.services.impl;
 
-import ru.ylab.applicationMemory.UserMemory;
-import ru.ylab.logs.UserActionsAuditor;
 import ru.ylab.model.Credentials;
 import ru.ylab.model.User;
+import ru.ylab.model.Wallet;
+import ru.ylab.repository.CredentialsRepository;
+import ru.ylab.repository.UserActionRepository;
 import ru.ylab.repository.UserRepository;
 import ru.ylab.services.UserService;
-import ru.ylab.tools.JsonConverter;
+import ru.ylab.utils.JsonConverter;
 
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * @implNote This implementation contains the logic for working with users
@@ -17,34 +18,50 @@ public class UserServiceImpl implements UserService {
     /**
      * Field contains a link to the object UserMemory
      */
-    private final UserRepository userMemory = new UserMemory();
+    private final UserRepository userDAO;
     /**
      * Field contains a link to the current user object in UserService
      */
     private User currentAppUser;
 
+    public UserServiceImpl(UserRepository userDAO) {
+        this.userDAO = userDAO;
+    }
+
     @Override
     public User processRegistration(String userJson) {
         User appUser = JsonConverter.convertToObject(User.class,userJson);
-        userMemory.saveUser(appUser);
-        currentAppUser = appUser;
-        return appUser;
+            if (appUser != null && CredentialsRepository.isLoginUsed(appUser.getCredentials().getLogin())) {
+                    long userId = userDAO.saveUser(appUser);
+                    appUser.setId(userId);
+                    appUser.setWallet(new Wallet(0));
+                    currentAppUser = appUser;
+                    return appUser;
+            } else {
+                System.out.println("Registration error");
+                return null;
+        }
     }
 
     @Override
     public boolean processLogin(String credentialsJson) {
         Credentials userCredentials = JsonConverter.convertToObject(Credentials.class,credentialsJson);
-        if (userCredentials.getLogin().equals("admin") && userCredentials.getPassword().equals("admin")){
+        if (userCredentials!= null && userCredentials.getLogin().equals("admin")
+                && userCredentials.getPassword().equals("admin")){
             processLoginAdmin(userCredentials);
             return true;
+        } else if (userCredentials != null){
+            Optional<User> appUser = userDAO.findUserByCredentials(userCredentials);
+            if (appUser.isPresent()) {
+                currentAppUser = appUser.get();
+                System.out.println(appUser.get());
+                return true;
+            }
+            return false;
         }
-        User appUser = userMemory.findUserByCredentials(userCredentials);
-        if (appUser != null) {
-            currentAppUser = appUser;
-            return true;
-        }
-        else return false;
-    }
+
+    else return false;
+}
 
     /**
      * Process for login admin, create admin user
@@ -54,7 +71,6 @@ public class UserServiceImpl implements UserService {
         currentAppUser = User.builder()
                 .credentials(adminCredentials)
                 .name("Admin")
-                .id(UUID.randomUUID())
                 .build();
     }
 
@@ -77,27 +93,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
-        userMemory.updateUser(user);
-    }
-
-    @Override
-    public void getUserTransactionalHistory() {
-        currentAppUser.getTransactionalHistory().forEach(System.out::println);
-    }
-
-    @Override
     public void getUserWallet() {
         System.out.println("Your balance: " + currentAppUser.getWallet().getBalance());
     }
 
     @Override
     public void processAdminPanelViewAllUsers() {
-        userMemory.findAllUsers().forEach(System.out::println);
+        userDAO.findAllUsers().forEach(System.out::println);
     }
 
     @Override
     public void processAdminPanelViewUserActionsAuditor() {
-        UserActionsAuditor.getRowData().forEach(System.out::println);
+        UserActionRepository.findAllUserActions().forEach(System.out::println);
     }
 }

@@ -1,31 +1,50 @@
 package ru.ylab.services.proxy;
 
-import ru.ylab.logs.UserActionsAuditor;
 import ru.ylab.model.User;
+import ru.ylab.repository.UserActionRepository;
 import ru.ylab.services.UserService;
-import ru.ylab.services.impl.UserServiceImpl;
+
+import java.sql.Timestamp;
+
 /**
  * @implNote The implementation is a Proxy class over the UserServiceImpl and is used to save user
  * actions into application memory before calling methods of the UserServiceImpl
  */
 public class UserServiceProxy implements UserService {
 
-    private final UserService userService = new UserServiceImpl();
+    private final UserService userService;
+
+    public UserServiceProxy(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public User processRegistration(String userJson) {
-        UserActionsAuditor.writeAction("Registration new User " + userJson);
-        return userService.processRegistration(userJson);
+        User user = userService.processRegistration(userJson);
+        if (user != null){
+            UserActionRepository.saveUserAction(user.getId(),
+                    "user - " + user.getName() + " registration","success",
+                    new Timestamp(System.currentTimeMillis()));
+        } else {
+            UserActionRepository.saveUserAction(user.getId(),
+                    "user - " + user.getName() + " registration","failed",
+                    new Timestamp(System.currentTimeMillis()));
+        }
+        return user;
     }
 
     @Override
     public boolean processLogin(String credentialsJson) {
         boolean isLogin = userService.processLogin(credentialsJson);
         if (isLogin) {
-            UserActionsAuditor.writeAction("User login success with credentials - " + credentialsJson);
+            UserActionRepository.saveUserAction(0,
+                    "login - " + credentialsJson,"success",
+                    new Timestamp(System.currentTimeMillis()));
             return true;
         } else {
-            UserActionsAuditor.writeAction("Wrong credentials for - " + credentialsJson);
+            UserActionRepository.saveUserAction(0,
+                    "login - " + credentialsJson,"failed",
+                    new Timestamp(System.currentTimeMillis()));
             return false;
         }
     }
@@ -37,25 +56,18 @@ public class UserServiceProxy implements UserService {
 
     @Override
     public boolean processLogout() {
-        UserActionsAuditor.writeAction("User logout - " + userService.getCurrentAppUser());
+        UserActionRepository.saveUserAction(userService.getCurrentAppUser().getId(),
+                "user id: " + userService.getCurrentAppUser().getId() + " - logout","success",
+                new Timestamp(System.currentTimeMillis()));
         return userService.processLogout();
     }
 
     @Override
-    public void updateUser(User user) {
-        userService.updateUser(user);
-    }
-
-    @Override
-    public void getUserTransactionalHistory() {
-        UserActionsAuditor.writeAction("User - " + "\n" + getCurrentAppUser() + "\n" +
-                " - look his transactional history");
-        userService.getUserTransactionalHistory();
-    }
-
-    @Override
     public void getUserWallet() {
-        UserActionsAuditor.writeAction("User - " + "\n" + getCurrentAppUser() + "\n" + " - look his balance");
+        UserActionRepository.saveUserAction(userService.getCurrentAppUser().getId(),
+                "user id: " + userService.getCurrentAppUser().getId() + " - look his balance",
+                "success",
+                new Timestamp(System.currentTimeMillis()));
         userService.getUserWallet();
     }
 

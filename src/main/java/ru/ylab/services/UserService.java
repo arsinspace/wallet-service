@@ -37,17 +37,6 @@ public interface UserService {
     boolean processLogout();
 
     /**
-     * Update user in application memory
-     * @param user user object
-     */
-    void updateUser(User user);
-
-    /**
-     * Response contains all current user transactions
-     */
-    void getUserTransactionalHistory();
-
-    /**
      * Response contains current user balance
      */
     void getUserWallet();

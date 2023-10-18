@@ -1,7 +1,7 @@
 package ru.ylab.in;
 
 import lombok.Getter;
-import ru.ylab.tools.KeyboardReader;
+import ru.ylab.utils.KeyboardReader;
 /**
  * Class describes the user request
  */

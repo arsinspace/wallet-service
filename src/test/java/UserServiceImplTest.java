@@ -1,5 +1,7 @@
+import config.ContainerEnvironment;
 import org.junit.Assert;
 import org.junit.Test;
+import ru.ylab.dao.UserDAO;
 import ru.ylab.model.Credentials;
 import ru.ylab.model.User;
 import ru.ylab.services.impl.UserServiceImpl;
@@ -7,11 +9,11 @@ import ru.ylab.services.impl.UserServiceImpl;
 /**
  * Tests for UserServiceImpl
  */
-public class UserServiceImplTest {
+public class UserServiceImplTest extends ContainerEnvironment {
 
     @Test
     public void processRegistrationShouldBeReturnValidUser(){
-        UserServiceImpl service = new UserServiceImpl();
+        UserServiceImpl service = new UserServiceImpl(new UserDAO());
 
         String testJsonUser = "{\"name\":\"Adam\",\"lastName\":\"Adam\",\"age\":\"29\",\"credentials\"" +
                 ":{\"login\":\"adam\",\"password\":\"123\"}}";
@@ -31,7 +33,7 @@ public class UserServiceImplTest {
 
     @Test
     public void processLoginShouldBeTrue(){
-        UserServiceImpl service = new UserServiceImpl();
+        UserServiceImpl service = new UserServiceImpl(new UserDAO());
         String testJsonUser = "{\"name\":\"Adam\",\"lastName\":\"Adam\",\"age\":\"29\",\"credentials\"" +
                 ":{\"login\":\"adam\",\"password\":\"123\"}}";
         service.processRegistration(testJsonUser);
@@ -43,7 +45,7 @@ public class UserServiceImplTest {
     }
     @Test
     public void processLoginShouldBeFalse(){
-        UserServiceImpl service = new UserServiceImpl();
+        UserServiceImpl service = new UserServiceImpl(new UserDAO());
         String testJsonUser = "{\"name\":\"Adam\",\"lastName\":\"Adam\",\"age\":\"29\",\"credentials\"" +
                 ":{\"login\":\"adam\",\"password\":\"123\"}}";
         service.processRegistration(testJsonUser);
@@ -54,7 +56,7 @@ public class UserServiceImplTest {
 
     @Test
     public void processLogoutShouldBeTrue(){
-        UserServiceImpl service = new UserServiceImpl();
+        UserServiceImpl service = new UserServiceImpl(new UserDAO());
         String testJsonUser = "{\"name\":\"Adam\",\"lastName\":\"Adam\",\"age\":\"29\",\"credentials\"" +
                 ":{\"login\":\"adam\",\"password\":\"123\"}}";
         service.processRegistration(testJsonUser);
