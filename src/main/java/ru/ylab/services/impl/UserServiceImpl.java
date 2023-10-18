@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User processRegistration(String userJson) {
         User appUser = JsonConverter.convertToObject(User.class,userJson);
-            if (appUser != null && CredentialsRepository.isLoginUsed(appUser.getCredentials().getLogin())) {
+            if (appUser != null && !CredentialsRepository.isLoginUsed(appUser.getCredentials().getLogin())) {
                     long userId = userDAO.saveUser(appUser);
                     appUser.setId(userId);
                     appUser.setWallet(new Wallet(0));
