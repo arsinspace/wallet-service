@@ -25,12 +25,13 @@ public class UserServiceProxy implements UserService {
             UserActionRepository.saveUserAction(user.getId(),
                     "user - " + user.getName() + " registration","success",
                     new Timestamp(System.currentTimeMillis()));
+            return user;
         } else {
-            UserActionRepository.saveUserAction(user.getId(),
-                    "user - " + user.getName() + " registration","failed",
+            UserActionRepository.saveUserAction(0L,
+                    "user - none" + " registration","failed",
                     new Timestamp(System.currentTimeMillis()));
+            return null;
         }
-        return user;
     }
 
     @Override
@@ -56,9 +57,16 @@ public class UserServiceProxy implements UserService {
 
     @Override
     public boolean processLogout() {
-        UserActionRepository.saveUserAction(userService.getCurrentAppUser().getId(),
-                "user id: " + userService.getCurrentAppUser().getId() + " - logout","success",
-                new Timestamp(System.currentTimeMillis()));
+        if (!userService.getCurrentAppUser().getName().startsWith("admin")){
+            UserActionRepository.saveUserAction(userService.getCurrentAppUser().getId(),
+                    "user id: " + userService.getCurrentAppUser().getId() + " - logout","success",
+                    new Timestamp(System.currentTimeMillis()));
+        }
+        else {
+            UserActionRepository.saveUserAction(0,
+                    "user id:0 - logout","success",
+                    new Timestamp(System.currentTimeMillis()));
+        }
         return userService.processLogout();
     }
 

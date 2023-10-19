@@ -9,6 +9,7 @@ public interface UserService {
     /**
      * Method converts the json object into a user object, saves the user in
      * application memory and assigns the class field a new value of the specified user
+     *
      * @param userJson JSON type String
      * @return user entity
      */

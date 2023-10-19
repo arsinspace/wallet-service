@@ -4,6 +4,7 @@ import ru.ylab.in.Request;
 import ru.ylab.model.User;
 import ru.ylab.out.response.ApplicationResponse;
 import ru.ylab.out.response.impl.*;
+import ru.ylab.repository.CredentialsRepository;
 import ru.ylab.repository.WalletRepository;
 import ru.ylab.services.TransactionalService;
 import ru.ylab.services.UserService;
@@ -142,11 +143,11 @@ public class UserController {
         responseWithMessage(new HelpMessageResponse(),HelpMessageResponse.NOT_REGISTERED);
         User appUser = userService.processRegistration(this.userRequest.getRequest());
         if (appUser != null){
-            responseWithMessage(new SuccessMessageResponse(),appUser.toString());
+            response(new SuccessMessageResponse());
             receiveCommand();
         }
         else {
-            response(new ErrorMessageResponse());
+            responseWithMessage(new ErrorMessageResponse(),"login is already used" + "\n");
             receiveCommand();
         }
     }

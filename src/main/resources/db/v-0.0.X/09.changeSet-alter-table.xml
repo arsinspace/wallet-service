@@ -5,14 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="001" author="arsinspace">
-        <sql>
-            alter table databasechangelog
-            set schema migration
-        </sql>
-        <sql>
-            alter table databasechangeloglock
-            set schema migration
-        </sql>
-    </changeSet>
+<!--    <changeSet id="001" author="arsinspace">-->
+<!--        <sql>-->
+<!--            alter table databasechangelog-->
+<!--            set schema migration-->
+<!--        </sql>-->
+<!--        <sql>-->
+<!--            alter table databasechangeloglock-->
+<!--            set schema migration-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 </databaseChangeLog>

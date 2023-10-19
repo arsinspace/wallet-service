@@ -10,7 +10,6 @@ The service helps in creating a user with wallet (default balance = 0.0), credit
 ```bash
 > gh repo clone arsinspace/wallet-service
 > cd WalletService
-> For migration DB use - mvn liquibase:update
 ```
 - Install Maven.
 - Update the dependencies given in the `pom.xml` using Maven.
