@@ -19,7 +19,7 @@ public class TestLiquibase {
         try {
             connection = ConnectionPool.getInstanceConnection().getConnection();
             Statement statement = connection.createStatement();
-            statement.execute("CREATE SCHEMA IF NOT EXISTS migration");
+            statement.execute("CREATE SCHEMA IF NOT EXISTS migration;CREATE SCHEMA IF NOT EXISTS wallet");
         } catch (SQLException e) {
             System.out.println("Migration error - " + e);
         } finally {
