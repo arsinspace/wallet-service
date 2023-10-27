@@ -1,4 +1,4 @@
-package ru.ylab.tools;
+package ru.ylab.utils;
 
 import lombok.Getter;
 

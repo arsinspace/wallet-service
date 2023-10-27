@@ -1,9 +1,10 @@
 package ru.ylab.services.proxy;
 
-import ru.ylab.logs.UserActionsAuditor;
 import ru.ylab.model.User;
+import ru.ylab.repository.UserActionRepository;
 import ru.ylab.services.TransactionalService;
-import ru.ylab.services.impl.TransactionalServiceImpl;
+
+import java.sql.Timestamp;
 
 /**
  * @implNote The implementation is a Proxy class over the TransactionalServiceImpl and is used to save user
@@ -11,18 +12,28 @@ import ru.ylab.services.impl.TransactionalServiceImpl;
  */
 public class TransactionalServiceProxy implements TransactionalService {
 
-    private final TransactionalService transactionalService = new TransactionalServiceImpl();
+    private final TransactionalService transactionalService;
+
+    public TransactionalServiceProxy(TransactionalService transactionalService) {
+
+        this.transactionalService = transactionalService;
+    }
+
 
     @Override
     public boolean processDebitTransaction(String jsonTransaction, User appUser) {
         boolean isSuccess = transactionalService.processDebitTransaction(jsonTransaction, appUser);
         if (isSuccess) {
-            UserActionsAuditor.writeAction("Transaction - " + jsonTransaction + " success for user:" + "\n"
-            + appUser);
+            UserActionRepository.saveUserAction(appUser.getId(),
+                    "user id: " + appUser.getId() + " - debit transaction",
+                    "success",
+                    new Timestamp(System.currentTimeMillis()));
             return true;
         } else {
-            UserActionsAuditor.writeAction("Transaction - " + jsonTransaction + " failed for user:" + "\n"
-                    + appUser);
+            UserActionRepository.saveUserAction(appUser.getId(),
+                    "user id: " + appUser.getId() + " - debit transaction",
+                    "failed",
+                    new Timestamp(System.currentTimeMillis()));
             return false;
         }
     }
@@ -31,13 +42,26 @@ public class TransactionalServiceProxy implements TransactionalService {
     public boolean processCreditTransaction(String jsonTransaction, User appUser) {
         boolean isSuccess = transactionalService.processCreditTransaction(jsonTransaction, appUser);
         if (isSuccess) {
-            UserActionsAuditor.writeAction("Transaction - " + jsonTransaction + " success for user:" + "\n"
-                    + appUser);
+            UserActionRepository.saveUserAction(appUser.getId(),
+                    "user id: " + appUser.getId() + " - credit transaction",
+                    "success",
+                    new Timestamp(System.currentTimeMillis()));
             return true;
         } else {
-            UserActionsAuditor.writeAction("Transaction - " + jsonTransaction + " failed for user:" + "\n"
-                    + appUser);
+            UserActionRepository.saveUserAction(appUser.getId(),
+                    "user id: " + appUser.getId() + " - credit transaction",
+                    "failed",
+                    new Timestamp(System.currentTimeMillis()));
             return false;
         }
+    }
+
+    @Override
+    public void getAllTransactions(long userId) {
+        UserActionRepository.saveUserAction(userId,
+                "user id: " + userId + " - look his transactional history",
+                "success",
+                new Timestamp(System.currentTimeMillis()));
+        transactionalService.getAllTransactions(userId);
     }
 }

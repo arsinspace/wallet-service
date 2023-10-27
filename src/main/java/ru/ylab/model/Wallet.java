@@ -8,7 +8,7 @@ import lombok.*;
 @Getter @Setter
 public class Wallet {
 
-    private double balance;
+    private int balance;
 
     @Override
     public String toString() {

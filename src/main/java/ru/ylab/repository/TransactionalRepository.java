@@ -3,44 +3,31 @@ package ru.ylab.repository;
 import ru.ylab.model.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Basic interface that provides operations for operating a transaction entity in application memory
+ * Basic interface that provides operations for operating a transaction entity in Database
  */
 public interface TransactionalRepository {
     /**
-     * Returns boolean - is any match transaction contains in transaction memory
+     * Returns boolean - is any match transaction contains in Database
      * @param id transaction ID
-     * @return contain or not contains transaction in application memory
+     * @return contain or not contains transaction in Database
      */
     boolean anyMatchTransactionalById(String id);
 
     /**
-     * Method find all transactional by userId in application memory
+     * Method find all transactions by userId in Database
      * @param id UUID User ID
-     * @return List of transactional
+     * @return List of transactions
      */
-    List<Transactional> findAllByUserId(UUID id);
+    List<Transactional> findAllByUserId(long id);
 
     /**
-     * Save transactional in application memory
-     * @param transactional transactional entity
-     * @return transactional entity
+     * Save transactional in Database
+     *
+     * @param transaction transactions entity
+     * @return transaction entity
      */
-    Transactional saveTransactional(Transactional transactional);
+    long saveTransaction(Transactional transaction);
 
-    /**
-     * Update transactional in application memory
-     * @param transactional transactional entity
-     * @return transactional entity
-     */
-    Transactional updateTransactional(Transactional transactional);
-
-    /**
-     * Delete transactional in application memory
-     * @param transactional transactional entity
-     * @return transactional entity
-     */
-    Transactional deleteTransactional(Transactional transactional);
 }

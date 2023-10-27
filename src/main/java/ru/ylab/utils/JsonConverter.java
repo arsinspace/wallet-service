@@ -1,4 +1,4 @@
-package ru.ylab.tools;
+package ru.ylab.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

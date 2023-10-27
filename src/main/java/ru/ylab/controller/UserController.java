@@ -4,10 +4,10 @@ import ru.ylab.in.Request;
 import ru.ylab.model.User;
 import ru.ylab.out.response.ApplicationResponse;
 import ru.ylab.out.response.impl.*;
+import ru.ylab.repository.CredentialsRepository;
+import ru.ylab.repository.WalletRepository;
 import ru.ylab.services.TransactionalService;
 import ru.ylab.services.UserService;
-import ru.ylab.services.proxy.TransactionalServiceProxy;
-import ru.ylab.services.proxy.UserServiceProxy;
 
 /**
  * Contains endpoints and logic for working with requests
@@ -16,15 +16,22 @@ public class UserController {
     /**
      * Field with UserServiceProxy
      */
-    private final UserService userService = new UserServiceProxy();
+    private final UserService userService;
     /**
      * Field with TransactionalServiceProxy
      */
-    private final TransactionalService transactionalService = new TransactionalServiceProxy();
+    private final TransactionalService transactionService;
     /**
      * Field with Request
      */
-    private final Request userRequest = new Request();
+    private final Request userRequest;
+
+    public UserController(UserService userService, TransactionalService transactionService) {
+        this.userService = userService;
+        this.transactionService = transactionService;
+        this.userRequest = new Request();
+
+    }
 
     /**
      * Receive command and transfer request to the required methods, also calls receiveCommand() method
@@ -47,7 +54,8 @@ public class UserController {
                 receiveCommand();
             }
         }
-        else if (userService.getCurrentAppUser().getCredentials().getLogin().equals("admin")){
+        else if (userService.getCurrentAppUser().getCredentials() != null &&
+                userService.getCurrentAppUser().getCredentials().getLogin().equals("admin")){
             adminPanel();
         }
         else {
@@ -135,11 +143,11 @@ public class UserController {
         responseWithMessage(new HelpMessageResponse(),HelpMessageResponse.NOT_REGISTERED);
         User appUser = userService.processRegistration(this.userRequest.getRequest());
         if (appUser != null){
-            responseWithMessage(new SuccessMessageResponse(),appUser.toString());
+            response(new SuccessMessageResponse());
             receiveCommand();
         }
         else {
-            response(new ErrorMessageResponse());
+            responseWithMessage(new ErrorMessageResponse(),"login is already used" + "\n");
             receiveCommand();
         }
     }
@@ -153,10 +161,10 @@ public class UserController {
     }
     /**
      * Endpoint for /history
-     * @see UserService#getUserTransactionalHistory()
+     * @see TransactionalService#getAllTransactions(long)()
      */
     private void history() {
-        userService.getUserTransactionalHistory();
+        transactionService.getAllTransactions(userService.getCurrentAppUser().getId());
         receiveCommand();
     }
 
@@ -180,29 +188,33 @@ public class UserController {
             switch (request){
                 case "/debit" -> {
                     responseWithMessage(new HelpMessageResponse(),HelpMessageResponse.WORK_WITH_TRANSACTION_HELP);
-                    if (transactionalService.processDebitTransaction(userRequest.getRequest(),
+                    if (transactionService.processDebitTransaction(userRequest.getRequest(),
                             userService.getCurrentAppUser())){
                         response(new SuccessMessageResponse());
                     } else {
                         response(new FailedMessageResponse());
+                        receiveCommand();
                     }
-                    userService.updateUser(userService.getCurrentAppUser());
-                    receiveCommand();
-                }
+                        WalletRepository.updateBalance(userService.getCurrentAppUser().getId(),
+                                userService.getCurrentAppUser().getWallet().getBalance());
+                        receiveCommand();
+                    }
                 case "/credit" -> {
                     responseWithMessage(new HelpMessageResponse(),HelpMessageResponse.WORK_WITH_TRANSACTION_HELP);
-                    if (transactionalService.processCreditTransaction(userRequest.getRequest(),
+                    if (transactionService.processCreditTransaction(userRequest.getRequest(),
                             userService.getCurrentAppUser())){
                         response(new SuccessMessageResponse());
                     } else {
                         response(new FailedMessageResponse());
+                        receiveCommand();
                     }
+                    WalletRepository.updateBalance(userService.getCurrentAppUser().getId(),
+                            userService.getCurrentAppUser().getWallet().getBalance());
                     receiveCommand();
-                    userService.updateUser(userService.getCurrentAppUser());
                 }
                 default -> receiveCommand();
-                }
             }
+        }
     }
 
     /**

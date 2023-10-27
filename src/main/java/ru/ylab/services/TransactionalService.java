@@ -1,6 +1,7 @@
 package ru.ylab.services;
 
 import ru.ylab.model.User;
+
 /**
  * Basic interface providing operations for working with transactions
  */
@@ -26,4 +27,6 @@ public interface TransactionalService {
      * @return boolean result of method
      */
     boolean processCreditTransaction(String jsonTransaction,User appUser);
+
+    void getAllTransactions(long userId);
 }

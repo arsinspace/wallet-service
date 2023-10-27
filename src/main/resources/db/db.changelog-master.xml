@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/db.changelog-master.xml">
+
+    <preConditions>
+        <dbms type="postgresql"/>
+    </preConditions>
+    
+   <changeSet id="0" author="arsinspace">-->
+       <sql dbms="postgresql" endDelimiter=";">
+           CREATE SCHEMA IF NOT EXISTS wallet;
+       </sql>
+</changeSet>
+    <include file="v-0.0.X/db.changelog-v.0.0.X.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
