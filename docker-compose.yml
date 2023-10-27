@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: walletServiceDB
     ports:
       - "54321:5432"
+
   walletService_db_admin:
     container_name: walletService_db_admin
     image: dpage/pgadmin4
