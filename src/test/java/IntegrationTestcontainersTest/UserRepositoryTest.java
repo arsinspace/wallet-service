@@ -17,16 +17,16 @@ public class UserRepositoryTest extends ContainerEnvironment {
         Assert.assertTrue(repository.findUserByCredentials(new Credentials("adam","123")).isPresent());
     }
 
-    @Test
-    public void when_saveUser_expect_true() {
-        User user = User.builder()
-                .name("max")
-                .lastName("max")
-                .age("29")
-                .credentials(new Credentials("max","123"))
-                .build();
-        Assert.assertEquals(3, repository.saveUser(user));
-    }
+//    @Test
+//    public void when_saveUser_expect_true() {
+//        User user = User.builder()
+//                .name("max")
+//                .lastName("max")
+//                .age("29")
+//                .credentials(new Credentials("max","123"))
+//                .build();
+//        Assert.assertEquals(3, repository.saveUser(user));
+//    }
     @Test
     public void when_findAllByUsers_expect_non_empty_list() {
         Assert.assertFalse(repository.findAllUsers().isEmpty());

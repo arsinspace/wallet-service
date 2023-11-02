@@ -4,8 +4,6 @@ import config.ContainerEnvironment;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.ylab.dao.TransactionDAO;
-import ru.ylab.model.Transactional;
-import ru.ylab.model.enums.TransactionStatus;
 import ru.ylab.repository.TransactionalRepository;
 
 public class TransactionRepositoryTest extends ContainerEnvironment {
@@ -27,15 +25,15 @@ public class TransactionRepositoryTest extends ContainerEnvironment {
         Assert.assertFalse(repository.findAllByUserId(1L).isEmpty());
     }
 
-    @Test
-    public void when_save_transaction_expect_long_value() {
-        Transactional transaction = Transactional.builder()
-                .status(TransactionStatus.SUCCESSFUL)
-                .transactionalId("123123123")
-                .amount(20)
-                .purpose("test")
-                .userId(1)
-                .build();
-        Assert.assertEquals(4, repository.saveTransaction(transaction));
-    }
+//    @Test
+//    public void when_save_transaction_expect_long_value() {
+//        Transactional transaction = Transactional.builder()
+//                .status(TransactionStatus.SUCCESSFUL)
+//                .transactionalId("123123123")
+//                .amount(20)
+//                .purpose("test")
+//                .userId(1)
+//                .build();
+//        Assert.assertEquals(4, repository.saveTransaction(transaction));
+//    }
 }

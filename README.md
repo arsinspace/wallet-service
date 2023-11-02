@@ -1,5 +1,5 @@
 # Wallet-Service:
-The service helps in creating a user with wallet (default balance = 0), credit funds to the wallet, deposit funds from wallet, maintain transaction details, login as Admin and view all users and users actions
+The service helps in creating a user with wallet (default balance = 0.0), credit funds to the wallet, deposit funds from wallet, maintain transaction details, login as Admin and view all users and users actions
 
 # Prerequisites:
 - Java 17 or above
@@ -9,11 +9,10 @@ The service helps in creating a user with wallet (default balance = 0), credit f
 - Clone this repo:
 ```bash
 > gh repo clone arsinspace/wallet-service
-> cd WalletService
+> mvn clean install
 ```
 - Install Maven.
 - Update the dependencies given in the `pom.xml` using Maven.
-- docker-compose up
 - Run WalletServiceApplication.java in the IDE.
 # Sample API end points:
 ```

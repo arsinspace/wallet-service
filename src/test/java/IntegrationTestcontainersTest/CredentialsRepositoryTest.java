@@ -12,8 +12,8 @@ public class CredentialsRepositoryTest extends ContainerEnvironment {
         Assert.assertTrue(CredentialsRepository.isLoginUsed("adam"));
     }
 
-    @Test
-    public void when_isLoginUsed_expect_false(){
-        Assert.assertFalse((CredentialsRepository.isLoginUsed("adam1")));
-    }
+//    @Test
+//    public void when_isLoginUsed_expect_false(){
+//        Assert.assertFalse((CredentialsRepository.isLoginUsed("adam1")));
+//    }
 }

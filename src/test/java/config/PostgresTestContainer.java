@@ -1,5 +1,7 @@
 package config;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class PostgresTestContainer extends PostgreSQLContainer<PostgresTestContainer>{
@@ -19,13 +21,16 @@ public class PostgresTestContainer extends PostgreSQLContainer<PostgresTestConta
         return container;
     }
 
+    @BeforeAll
     @Override
     public void start(){
         super.start();
-        System.setProperty("url",container.getJdbcUrl());
-        System.setProperty("username",container.getUsername());
-        System.setProperty("password",container.getPassword());
+        System.setProperty("DB_URL",container.getJdbcUrl());
+        System.setProperty("DB_USERNAME",container.getUsername());
+        System.setProperty("DB_PASSWORD",container.getPassword());
     }
+
+    @AfterAll
     @Override
     public void stop(){
 
