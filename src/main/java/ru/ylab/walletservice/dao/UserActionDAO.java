@@ -1,6 +1,7 @@
 package ru.ylab.walletservice.dao;
 
 import lombok.Cleanup;
+import org.springframework.stereotype.Repository;
 import ru.ylab.walletservice.model.UserAction;
 import ru.ylab.walletservice.utils.db.ConnectionPool;
 import ru.ylab.walletservice.utils.mappers.UserActionMapper;
@@ -12,36 +13,33 @@ import java.util.List;
 /**
  * Class provides operations for operating a User actions entity in Database
  */
+@Repository
 public class UserActionDAO {
-
-    private static final UserActionDAO USER_ACTION_DAO = new UserActionDAO();
 
     /**
      * This field contains sql query for save user action entity in DB
      */
-   private static final String SAVE_QUERY = "insert into wallet.user_action (user_id, action) " +
-            "values (?,?)";
+   private static final String SAVE_QUERY = "insert into wallet.user_action (user_id, action, status, time) " +
+            "values (?,?,?,?)";
     /**
      * This field contains sql query for find all users action entity in DB
      */
    private static final String FIND_ALL_BY_USER_ID_QUERY = "select * from wallet.user_action";
-
-   public static UserActionDAO getInstance(){
-       return USER_ACTION_DAO;
-   }
 
     /**
      * This method saving entity in Database
      * @param user_id Long userId
      * @param action String user action
      */
-    public void saveUserAction(long user_id, String action){
+    public void saveUserAction(long user_id, String action, String status, Timestamp time){
         try {
             Connection connection = ConnectionPool.getInstanceConnection().getConnection();
 
             @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(SAVE_QUERY);
             preparedStatement.setLong(1, user_id);
             preparedStatement.setString(2, action);
+            preparedStatement.setString(3,status);
+            preparedStatement.setTimestamp(4,time);
             preparedStatement.executeUpdate();
             connection.commit();
             ConnectionPool.getInstanceConnection().closeConnection(connection);

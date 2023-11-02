@@ -1,6 +1,7 @@
 package ru.ylab.walletservice.dao;
 
 import lombok.Cleanup;
+import org.springframework.stereotype.Repository;
 import ru.ylab.walletservice.model.Transaction;
 import ru.ylab.walletservice.repository.TransactionalRepository;
 import ru.ylab.walletservice.utils.db.ConnectionPool;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  *  This implementation contains the logic for working with transactions in DB
  */
+@Repository
 public class TransactionDAO implements TransactionalRepository {
     /**
      * This field contains sql query for matching transactions in DB

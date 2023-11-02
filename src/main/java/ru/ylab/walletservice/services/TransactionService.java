@@ -2,6 +2,7 @@ package ru.ylab.walletservice.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.ylab.walletservice.dto.TransactionDTO;
 import ru.ylab.walletservice.model.Transaction;
 
 import java.io.IOException;
@@ -16,29 +17,26 @@ public interface TransactionService {
      * of a transaction id in the application memory, checks the possibility of
      * debit funds from the user's wallet, save the transaction entity in application memory,
      * debit funds from the user's wallet
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @param userId current application userId
-     * @return boolean result of method
+     * @param userId Long userId
+     * @param transactionDTO TransactionDTO
+     * @return String result of method
      */
-    boolean processDebitTransaction(HttpServletRequest request, HttpServletResponse response, long userId)
-            throws IOException;
+    String processDebitTransaction(TransactionDTO transactionDTO, long userId);
 
     /**
      * The method converts a json object into a transaction object, checks the presence
      * of a transaction id in the application memory, checks the possibility of
      * credit funds from the user's wallet, save the transaction entity in application memory,
      * credit funds to the user's wallet
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @param userId current application userId
-     * @return boolean result of method
+     * @param userId Long userId
+     * @param transactionDTO TransactionDTO
+     * @return String result of method
      */
-    boolean processCreditTransaction(HttpServletRequest request, HttpServletResponse response, long userId) throws IOException;
+    String  processCreditTransaction(TransactionDTO transactionDTO, long userId);
 
     /**
      * Method find all transactions by UserId in database
-     * @param userId long appUserId
+     * @param userId Long userId
      * @return List of transactions
      */
     List<Transaction> getAllTransactions(long userId);

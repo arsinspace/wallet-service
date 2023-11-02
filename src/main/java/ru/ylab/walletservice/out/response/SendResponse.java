@@ -1,7 +1,7 @@
 package ru.ylab.walletservice.out.response;
 
 import jakarta.servlet.http.HttpServletResponse;
-import ru.ylab.walletservice.utils.JsonConverter;
+import ru.ylab.walletservice.utils.mappers.JsonConverter;
 
 import java.io.IOException;
 import java.util.Collections;
