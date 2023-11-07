@@ -1,0 +1,8 @@
+ru/ylab/boot/utils/annotation/TrackParameter.class
+ru/ylab/boot/aop/UserActionAspect.class
+ru/ylab/boot/config/UserActionAutoConfig.class
+ru/ylab/boot/repository/UserActionRepository.class
+ru/ylab/boot/model/UserAction$UserActionBuilder.class
+ru/ylab/boot/dao/UserActionDAO.class
+ru/ylab/boot/utils/annotation/TrackEvent.class
+ru/ylab/boot/model/UserAction.class

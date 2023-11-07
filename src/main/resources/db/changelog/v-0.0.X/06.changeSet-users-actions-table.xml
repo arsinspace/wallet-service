@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="06" author="arsinspace">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="user_action_seq" schemaName="wallet"/>
+                <tableExists tableName="user_action" schemaName="wallet"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="user_action_seq" incrementBy="1" maxValue="100000" minValue="1" startValue="1"/>
+        <createTable tableName="user_action" schemaName="wallet">
+            <column name="user_action_id" type="bigint" defaultValueComputed="nextval('user_action_seq')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint"/>
+            <column name="action" type="varchar(250)"/>
+            <column name="status" type="varchar(250)"/>
+            <column name="time" type="timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

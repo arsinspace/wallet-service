@@ -1,0 +1,13 @@
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/aop/UserActionAspect.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/utils/annotation/TrackEvent.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/utils/annotation/IncludeToUserActionConfig.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/utils/annotation/Loggable.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/config/EnableUserAudition.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/config/LoggingAutoconfigure.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/dao/UserActionDAO.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/model/UserAction.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/repository/UserActionRepository.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/aop/LogAspect.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/utils/annotation/TrackParameter.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/config/UserActionAutoConfig.java
+/Volumes/HD 2TB/JavaProjects/new WS/wallet-service/logging-action-spring-boot-starter/src/main/java/ru/ylab/boot/utils/annotation/EnableLoggingAspect.java
