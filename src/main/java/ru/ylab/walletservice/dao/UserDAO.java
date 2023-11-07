@@ -1,6 +1,8 @@
 package ru.ylab.walletservice.dao;
 
 import lombok.Cleanup;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.ylab.walletservice.model.Credentials;
 import ru.ylab.walletservice.model.User;
 import ru.ylab.walletservice.model.Wallet;
@@ -16,6 +18,7 @@ import java.util.Optional;
 /**
  *  This implementation contains the logic for working with users entities in DB
  */
+@Repository
 public class UserDAO implements UserRepository {
     /**
      * This field contains sql query for find all users in DB
@@ -43,6 +46,24 @@ public class UserDAO implements UserRepository {
             inner join wallet.credentials cr on u.user_id = cr.user_id
             inner join wallet.wallet wa on u.user_id = wa.user_id
             where cr.username = ? and cr.password = ?""";
+    /**
+     * This field contains sql query for find user in DB by his username
+     */
+    private static final String FIND_USER_BY_USERNAME = """
+            select u.user_id, u.name, last_name, age, wa.balance, cr.username, cr.password
+            from wallet.users u
+            inner join wallet.credentials cr on u.user_id = cr.user_id
+            inner join wallet.wallet wa on u.user_id = wa.user_id
+            where cr.username = ?""";
+    /**
+     * This field contains sql query for find userId in DB by his username
+     */
+    private static final String FIND_USER_ID_BY_USERNAME = """
+            select u.user_id
+            from wallet.users u
+            inner join wallet.credentials cr on u.user_id = cr.user_id
+            where username = ?
+            """;
 
     @Override
     public long saveUser(User user){
@@ -138,8 +159,44 @@ public class UserDAO implements UserRepository {
             }
             return users;
         } catch (IOException | ClassNotFoundException | InterruptedException | SQLException exception) {
-            System.out.println("Error to find transaction ID - " + exception);
+            System.out.println("Error to find Users - " + exception);
             return users;
+        }
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        try {
+            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
+            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_USERNAME);
+            preparedStatement.setString(1, username);
+            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
+            ConnectionPool.getInstanceConnection().closeConnection(connection);
+            if (resultSet.next()){
+                return Optional.of(UserMapper.convertToUser(resultSet));
+            }
+            return Optional.empty();
+        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
+            System.out.println("Error to find user by Username - " + exception);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Long> findUserIdByUsername(String username) {
+        try {
+            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
+            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_ID_BY_USERNAME);
+            preparedStatement.setString(1, username);
+            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
+            ConnectionPool.getInstanceConnection().closeConnection(connection);
+            if (resultSet.next()){
+                return Optional.of(resultSet.getLong("user_id"));
+            }
+            return Optional.empty();
+        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
+            System.out.println("Error to find userId by Username - " + exception);
+            return Optional.empty();
         }
     }
 }

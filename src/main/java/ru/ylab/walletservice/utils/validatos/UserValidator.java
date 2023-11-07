@@ -37,7 +37,7 @@ public class UserValidator {
             throw new ValidationException("Invalid User lastName");
         } else if (!agePredicate.test(user.getAge())){
             throw new ValidationException("Invalid User age");
-        } else if (!walletPredicate.test(user.getWallet())){
+        } else if (!walletPredicate.test(user.getWallet())) {
             throw new ValidationException("Wallet must be NULL");
         } else if (!credentialsPredicate.test(user.getCredentials())){
             throw new ValidationException("Invalid Credentials");

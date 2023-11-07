@@ -1,10 +1,13 @@
 package ru.ylab.walletservice.utils.mappers;
 
+import ru.ylab.walletservice.model.Credentials;
 import ru.ylab.walletservice.model.User;
 import ru.ylab.walletservice.model.Wallet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 /**
  * Class for convert to User object from ResultSet
  */
@@ -23,7 +26,13 @@ public class UserMapper {
                     .lastName(resultSet.getString("last_name"))
                     .age(resultSet.getString("age"))
                     .wallet(new Wallet(resultSet.getInt("balance")))
+                    .credentials(new Credentials(resultSet.getString("username"),
+                            resultSet.getString("password")))
+                    .roles(List.of("ROLE_USER"))
                     .build();
+            if (user.getCredentials().getLogin().equals("admin")){
+                user.getRoles().add("ROLE_ADMIN");
+            }
         } catch (SQLException exception){
             System.out.println("Error to convert User");
         }

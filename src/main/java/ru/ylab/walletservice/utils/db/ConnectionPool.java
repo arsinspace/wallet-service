@@ -1,5 +1,8 @@
 package ru.ylab.walletservice.utils.db;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,10 +14,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Class for create connection pool to Database with JDBC driver
  */
+@PropertySource("classpath:application.yml")
 public class ConnectionPool {
     /**
      * This field contains pool size for connection pool
      */
+    @Value("${connection.poolSize}")
     private static int POOL_SIZE;
     /**
      * This field contains connection pool instance
@@ -23,14 +28,17 @@ public class ConnectionPool {
     /**
      * This field contains Database URL
      */
+    @Value("${spring.datasource.url}")
     private static String URL;
     /**
      * This field contains Database username
      */
+    @Value("${spring.datasource.username}")
     private static String USER;
     /**
      * This field contains Database password
      */
+    @Value("${spring.datasource.password}")
     private static String PASSWORD;
     /**
      * This field contains connection BlockingQueue

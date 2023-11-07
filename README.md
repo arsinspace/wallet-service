@@ -4,6 +4,7 @@ The service helps in creating a user with wallet (default balance = 0.0), credit
 # Prerequisites:
 - Java 17 or above
 - Maven
+- Payara server 6 or Tomcat 10
 
 # Installation:
 - Clone this repo:
@@ -13,7 +14,7 @@ The service helps in creating a user with wallet (default balance = 0.0), credit
 ```
 - Install Maven.
 - Update the dependencies given in the `pom.xml` using Maven.
-- Run WalletServiceApplication.java in the IDE.
+- Run with Tomcat in the IDE or deploy to application server
 # Sample API end points:
 ```
 Register new User. Create user will automatically 

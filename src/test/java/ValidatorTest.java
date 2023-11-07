@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.ylab.walletservice.dto.TransactionDTO;
 import ru.ylab.walletservice.model.User;
-import ru.ylab.walletservice.utils.JsonConverter;
+import ru.ylab.walletservice.utils.mappers.JsonConverter;
 import ru.ylab.walletservice.utils.validatos.TransactionDTOValidator;
 import ru.ylab.walletservice.utils.validatos.UserValidator;
 

@@ -31,4 +31,7 @@ public interface UserRepository {
      * @return List of Users
      */
     List<User> findAllUsers();
+
+    Optional<User> findByUsername(String username);
+    Optional<Long> findUserIdByUsername(String username);
 }
