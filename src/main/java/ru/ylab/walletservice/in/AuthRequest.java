@@ -16,7 +16,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRequest implements Serializable {
-
     @Serial
     private static final long serialVersionUID = -6986746375915710855L;
     private String username;

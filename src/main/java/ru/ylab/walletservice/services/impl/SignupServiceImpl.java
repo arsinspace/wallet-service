@@ -2,14 +2,13 @@ package ru.ylab.walletservice.services.impl;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ylab.walletservice.dao.UserDAO;
 import ru.ylab.walletservice.model.User;
 import ru.ylab.walletservice.repository.CredentialsRepository;
 import ru.ylab.walletservice.services.SignupService;
-import ru.ylab.walletservice.utils.annotation.TrackEvent;
+
 import ru.ylab.walletservice.utils.validatos.UserValidator;
 
 /**
@@ -17,13 +16,21 @@ import ru.ylab.walletservice.utils.validatos.UserValidator;
  * database and assigns the class field a new value of the specified user
  */
 @Service
-@ComponentScan(value = {"ru.ylab.walletservice.dao"})
 @RequiredArgsConstructor
 public class SignupServiceImpl implements SignupService {
-
+    /**
+     * This field contains link to UserDAO
+     */
     private final UserDAO userDAO;
+    /**
+     * This field contains link to PasswordEncoder
+     */
     private final PasswordEncoder encoder;
-    @TrackEvent(action = "User signup")
+    /**
+     * This field contains link to CredentialsRepository
+     */
+    private final CredentialsRepository credentialsRepository;
+
     @Override
     public String processSignup(User user){
 
@@ -32,7 +39,7 @@ public class SignupServiceImpl implements SignupService {
         } catch (ValidationException e){
             return "Not valid User " + e;
         }
-        if (!CredentialsRepository.isLoginUsed(user.getCredentials().getLogin())){
+        if (!credentialsRepository.isLoginUsed(user.getCredentials().getLogin())){
             user.getCredentials().setPassword(encoder.encode(user.getPassword()));
             long userId = userDAO.saveUser(user);
             return "Success signup";

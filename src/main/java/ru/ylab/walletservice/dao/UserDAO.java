@@ -1,25 +1,28 @@
 package ru.ylab.walletservice.dao;
 
-import lombok.Cleanup;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.ylab.walletservice.model.Credentials;
 import ru.ylab.walletservice.model.User;
 import ru.ylab.walletservice.model.Wallet;
 import ru.ylab.walletservice.repository.UserRepository;
-import ru.ylab.walletservice.utils.db.ConnectionPool;
 import ru.ylab.walletservice.utils.mappers.UserMapper;
 
-import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
 /**
  *  This implementation contains the logic for working with users entities in DB
  */
 @Repository
+@RequiredArgsConstructor
 public class UserDAO implements UserRepository {
+
+   private final JdbcTemplate jdbcTemplate;
     /**
      * This field contains sql query for find all users in DB
      */
@@ -64,139 +67,53 @@ public class UserDAO implements UserRepository {
             inner join wallet.credentials cr on u.user_id = cr.user_id
             where username = ?
             """;
-
     @Override
     public long saveUser(User user){
 
-               try {
-                   Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-                   @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(SAVE_QUERY,
-                           Statement.RETURN_GENERATED_KEYS);
-                   preparedStatement.setString(1, user.getName());
-                   preparedStatement.setString(2, user.getLastName());
-                   preparedStatement.setString(3, user.getAge());
-                   preparedStatement.executeUpdate();
-                   connection.commit();
-                   @Cleanup ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                   ConnectionPool.getInstanceConnection().closeConnection(connection);
-                   if (generatedKeys.next()){
-                       user.setId(generatedKeys.getLong(1));
-                       saveUserCredentials(user.getId(), user.getCredentials());
-                       saveUserWallet(user.getId(), new Wallet(0));
-                       return user.getId();
-                   }
-               } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-                   System.out.println("Error to save user - " + exception);
-                   return user.getId();
-               }
-        return user.getId();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SAVE_QUERY, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getAge());
+            return ps;
+        }, keyHolder);
+        System.out.println(Objects.requireNonNull(keyHolder.getKeys()).get("user_id").toString());
+        saveUserCredentials((Long) keyHolder.getKeys().get("user_id"),user.getCredentials());
+        saveUserWallet((Long) keyHolder.getKeys().get("user_id"),new Wallet(0));
+
+        return (long) keyHolder.getKeys().get("user_id");
+
     }
     private void saveUserCredentials(Long userId,Credentials credentials){
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(SAVE_CREDENTIALS_QUERY);
-            preparedStatement.setLong(1, userId);
-            preparedStatement.setString(2, credentials.getLogin());
-            preparedStatement.setString(3, credentials.getPassword());
-            preparedStatement.executeUpdate();
-            connection.commit();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-            System.out.println("Error to save user credentials - " + exception);
-        }
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SAVE_CREDENTIALS_QUERY);
+            ps.setLong(1, userId);
+            ps.setString(2, credentials.getLogin());
+            ps.setString(3, credentials.getPassword());
+            return ps;
+        });
     }
     private void saveUserWallet(Long userId,Wallet wallet){
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(SAVE_WALLET_QUERY);
-            preparedStatement.setLong(1, userId);
-            preparedStatement.setInt(2, wallet.getBalance());
-            preparedStatement.executeUpdate();
-            connection.commit();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-            System.out.println("Error to save user wallet - " + exception);
-        }
-    }
-
-    @Override
-    public Optional<User> findUserByCredentials(Credentials credentials){
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_CREDENTIALS);
-            preparedStatement.setString(1, credentials.getLogin());
-            preparedStatement.setString(2, credentials.getPassword());
-            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-            if (resultSet.next()){
-                return Optional.of(UserMapper.convertToUser(resultSet));
-            }
-            return Optional.empty();
-        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-            System.out.println("Error to find user by Credentials - " + exception);
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public List<User> findAllUsers() {
-        List<User> users = new ArrayList<>();
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement =
-                    connection.prepareStatement(FIND_ALL_QUERY);
-            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-            if (resultSet.next()){
-                while (resultSet.next()){
-                    users.add(User.builder()
-                            .id(resultSet.getLong("user_id"))
-                            .name(resultSet.getString("name"))
-                            .lastName(resultSet.getString("last_name"))
-                            .age(resultSet.getString("age"))
-                            .build());
-                }
-            }
-            return users;
-        } catch (IOException | ClassNotFoundException | InterruptedException | SQLException exception) {
-            System.out.println("Error to find Users - " + exception);
-            return users;
-        }
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SAVE_WALLET_QUERY);
+            ps.setLong(1, userId);
+            ps.setInt(2, wallet.getBalance());
+            return ps;
+        });
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_USERNAME);
-            preparedStatement.setString(1, username);
-            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-            if (resultSet.next()){
-                return Optional.of(UserMapper.convertToUser(resultSet));
-            }
-            return Optional.empty();
-        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-            System.out.println("Error to find user by Username - " + exception);
-            return Optional.empty();
-        }
+
+        return Optional.of(
+                jdbcTemplate.queryForObject(FIND_USER_BY_USERNAME,new Object[] {username},new UserMapper()));
     }
 
     @Override
     public Optional<Long> findUserIdByUsername(String username) {
-        try {
-            Connection connection = ConnectionPool.getInstanceConnection().getConnection();
-            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_ID_BY_USERNAME);
-            preparedStatement.setString(1, username);
-            @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
-            ConnectionPool.getInstanceConnection().closeConnection(connection);
-            if (resultSet.next()){
-                return Optional.of(resultSet.getLong("user_id"));
-            }
-            return Optional.empty();
-        } catch (InterruptedException | SQLException | ClassNotFoundException | IOException exception) {
-            System.out.println("Error to find userId by Username - " + exception);
-            return Optional.empty();
-        }
+
+        return Optional.of(
+                jdbcTemplate.queryForObject(FIND_USER_ID_BY_USERNAME,new Object[] {username}, Long.class));
     }
 }

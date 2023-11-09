@@ -1,5 +1,6 @@
 package ru.ylab.walletservice.utils.mappers;
 
+import org.springframework.jdbc.core.RowMapper;
 import ru.ylab.walletservice.model.Transaction;
 import ru.ylab.walletservice.model.enums.TransactionStatus;
 
@@ -8,26 +9,22 @@ import java.sql.SQLException;
 /**
  * Class for convert to transaction object from ResultSet
  */
-public class TransactionMapper {
-    /**
-     * This method convert to transaction object from ResultSet
-     * @param resultSet ResultSet
-     * @return Transaction entity
-     */
-    public static Transaction convertToTransaction(ResultSet resultSet){
+public class TransactionMapper implements RowMapper<Transaction> {
+    @Override
+    public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
         Transaction transaction = null;
         try {
             transaction = Transaction.builder()
-                    .id(resultSet.getLong("transaction_id"))
-                    .userId(resultSet.getLong("user_id"))
-                    .transactionalId(resultSet.getString("users_transaction_name"))
-                    .purpose(resultSet.getString("purpose"))
-                    .amount(resultSet.getInt("amount"))
-                    .status(TransactionStatus.valueOf(resultSet.getString("transaction_status")))
-                    .transactionalTime(resultSet.getTimestamp("transaction_time"))
+                    .id(rs.getLong("transaction_id"))
+                    .userId(rs.getLong("user_id"))
+                    .transactionalId(rs.getString("users_transaction_name"))
+                    .purpose(rs.getString("purpose"))
+                    .amount(rs.getInt("amount"))
+                    .status(TransactionStatus.valueOf(rs.getString("transaction_status")))
+                    .transactionalTime(rs.getTimestamp("transaction_time"))
                     .build();
         } catch (SQLException exception){
-            System.out.println("Error to convert User");
+            System.out.println("Error to convert Transaction");
         }
         return transaction;
     }

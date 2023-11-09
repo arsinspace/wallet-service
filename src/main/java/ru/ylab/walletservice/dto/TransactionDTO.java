@@ -2,9 +2,15 @@ package ru.ylab.walletservice.dto;
 
 import lombok.*;
 
-@AllArgsConstructor @NoArgsConstructor
-@Getter @Setter
-@Builder @ToString
+/**
+ * Data transfer class for Transaction
+ */
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
 public class TransactionDTO {
 
     private String transactionalId;

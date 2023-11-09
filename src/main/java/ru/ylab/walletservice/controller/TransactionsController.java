@@ -8,15 +8,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.ylab.boot.utils.annotation.TrackEvent;
 import ru.ylab.walletservice.dto.TransactionDTO;
 import ru.ylab.walletservice.model.Transaction;
 import ru.ylab.walletservice.services.TransactionService;
-import ru.ylab.walletservice.utils.annotation.TrackEvent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * This controller contains logic for endpoints /transaction/debit, /transaction/credit
@@ -48,8 +47,7 @@ public class TransactionsController {
             @ApiResponse(responseCode = "400", description = "{message: }"),
             @ApiResponse(responseCode = "409", description = "{message: No valid transaction id}") })
     public ResponseEntity<Object> debitTransaction(@RequestAttribute long userId, @RequestBody TransactionDTO dto) {
-        System.out.println(userId);
-        System.out.println(dto);
+
         Map<Object, Object> model = new HashMap<>();
         String response = service.processDebitTransaction(dto, userId);
        switch (response){
@@ -87,6 +85,7 @@ public class TransactionsController {
             @ApiResponse(responseCode = "409", description = "{message: No valid transaction id}") ,
             @ApiResponse(responseCode = "400", description = "{message: }")})
     public ResponseEntity<Object> creditTransaction(@RequestAttribute long userId, @RequestBody TransactionDTO dto) {
+
         Map<Object, Object> model = new HashMap<>();
         String response = service.processCreditTransaction(dto, userId);
         switch (response){

@@ -1,11 +1,8 @@
 package ru.ylab.walletservice.repository;
 
-import ru.ylab.walletservice.model.Credentials;
 import ru.ylab.walletservice.model.User;
 
-import java.util.List;
 import java.util.Optional;
-
 /**
  * Basic interface that provides operations for operating a user entity in database
  */
@@ -19,19 +16,16 @@ public interface UserRepository {
     long saveUser(User user);
 
     /**
-     * Find user by credentials in database
-     *
-     * @param credentials user entity
-     * @return Optional user entity
+     * Find User entity in database by username
+     * @param username String
+     * @return Optional User entity
      */
-    Optional<User> findUserByCredentials(Credentials credentials);
+    Optional<User> findByUsername(String username);
 
     /**
-     * Find all users in database. Intended for administrator.
-     * @return List of Users
+     * Find userId in database by username
+     * @param username String
+     * @return Optional long userId
      */
-    List<User> findAllUsers();
-
-    Optional<User> findByUsername(String username);
     Optional<Long> findUserIdByUsername(String username);
 }

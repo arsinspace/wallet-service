@@ -10,7 +10,9 @@ The service helps in creating a user with wallet (default balance = 0.0), credit
 - Clone this repo:
 ```bash
 > gh repo clone arsinspace/wallet-service
-> mvn clean install
+> mvn spring-boot:run 
+> or mvn clean install and deploy 
+> to application server
 ```
 - Install Maven.
 - Update the dependencies given in the `pom.xml` using Maven.

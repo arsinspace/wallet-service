@@ -22,7 +22,6 @@ public class TransactionDTOValidator {
         return TRANSACTION_DTO_VALIDATOR;
     }
     public boolean isValid(TransactionDTO transactionDTO) {
-
         if (!transactionIdIsValid.test(transactionDTO.getTransactionalId())){
             throw new ValidationException("TransactionD id invalid");
         } else if (!purpose.test(transactionDTO.getPurpose())){

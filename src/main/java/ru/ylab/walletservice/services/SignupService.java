@@ -6,6 +6,7 @@ import ru.ylab.walletservice.model.User;
  * Basic interface providing operations for working with signup
  */
 public interface SignupService {
+
     /**
      * Contains logic for working with signup request
      * @param user User entity

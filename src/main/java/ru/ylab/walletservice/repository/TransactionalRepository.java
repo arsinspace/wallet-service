@@ -8,6 +8,7 @@ import java.util.List;
  * Basic interface that provides operations for operating a transaction entity in Database
  */
 public interface TransactionalRepository {
+
     /**
      * Returns boolean - is any match transaction contains in Database
      * @param id transaction ID

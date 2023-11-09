@@ -2,6 +2,7 @@ package ru.ylab.walletservice.utils.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -33,15 +33,23 @@ import static java.util.stream.Collectors.joining;
 @Slf4j
 @RequiredArgsConstructor
 public class JWTTokenProvider {
+    /**
+     * This field contains AUTHORITIES_KEY
+     */
     private static final String AUTHORITIES_KEY = "roles";
-
+    /**
+     * This field contains base 64 key
+     */
     @Value("${jwt.base64-secret}")
     private String base64Secret;
-
-
+    /**
+     * This field contains token validity in milliseconds
+     */
     @Value("${jwt.token-validity-in-seconds}")
     private long tokenValidityInMilliseconds;
-
+    /**
+     * This field contains secret key
+     */
     private SecretKey secretKey;
 
     @PostConstruct

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import ru.ylab.walletservice.repository.UserRepository;
-import ru.ylab.walletservice.utils.annotation.Loggable;
 import ru.ylab.walletservice.utils.security.JWTTokenProvider;
 
 import java.io.IOException;
@@ -40,24 +39,31 @@ import java.io.IOException;
 public class WebSecurityFilter extends GenericFilterBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityFilter.class);
-
+    /**
+     * This field contains HEADER_PREFIX for auth
+     */
     public static final String HEADER_PREFIX = "Bearer ";
-
+    /**
+     * This field contains link to JWTTokenProvider
+     */
     private final JWTTokenProvider jwtTokenProvider;
+    /**
+     * This field contains link to UserRepository
+     */
     private final UserRepository userDAO;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
-        System.out.println(req);
         String token = resolveToken((HttpServletRequest) req);
-        System.out.println(token);
         LOG.info("Extracting token from HttpServletRequest: {}", token);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
+
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             long userId = userDAO.findUserIdByUsername(auth.getName()).get();
             req.setAttribute("userId", userId);
+
             if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
                 System.out.println("AnonymousAuthenticationToken");
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -68,9 +74,7 @@ public class WebSecurityFilter extends GenericFilterBean {
         filterChain.doFilter(req, res);
     }
 
-    @Loggable
     private String resolveToken(HttpServletRequest request) {
-        System.out.println("resolveToken");
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HEADER_PREFIX)) {
             return bearerToken.substring(7);

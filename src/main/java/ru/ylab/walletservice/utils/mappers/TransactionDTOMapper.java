@@ -10,9 +10,7 @@ import ru.ylab.walletservice.model.Transaction;
  */
 @Mapper
 public interface TransactionDTOMapper {
-
     TransactionDTOMapper INSTANCE = Mappers.getMapper(TransactionDTOMapper.class);
-
     TransactionDTO toDto(Transaction transaction);
     Transaction toTransaction(TransactionDTO dto);
 }

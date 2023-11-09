@@ -7,8 +7,10 @@ import java.sql.Timestamp;
 /**
  * Class describes a transaction
  */
-@AllArgsConstructor @NoArgsConstructor
-@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @ToString
 public class Transaction {

@@ -10,11 +10,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.ylab.boot.utils.annotation.TrackEvent;
 import ru.ylab.walletservice.in.AuthRequest;
 import ru.ylab.walletservice.model.User;
 import ru.ylab.walletservice.services.SignupService;
-import ru.ylab.walletservice.utils.annotation.TrackEvent;
+
 import ru.ylab.walletservice.utils.security.JWTTokenProvider;
 
 import java.util.Collections;
@@ -56,6 +60,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "{username: token: }"),
             @ApiResponse(responseCode = "400", description = "Bad credentials. Invalid username/password supplied") })
     public ResponseEntity<Object> login(@RequestBody AuthRequest data) {
+
         try {
             String username = data.getUsername();
             Authentication authentication = authenticationManager.authenticate(

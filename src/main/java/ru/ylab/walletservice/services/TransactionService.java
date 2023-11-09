@@ -1,17 +1,15 @@
 package ru.ylab.walletservice.services;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import ru.ylab.walletservice.dto.TransactionDTO;
 import ru.ylab.walletservice.model.Transaction;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Basic interface providing operations for working with transactions
  */
 public interface TransactionService {
+
     /**
      * The method converts a json object into a transaction object, checks the presence
      * of a transaction id in the application memory, checks the possibility of

@@ -28,6 +28,7 @@ public class UserValidator {
             && credentials.getPassword().length() >= 3 && credentials.getLogin().length() <= 15;
 
     public boolean isValid(User user) {
+
         if (!idMustBeNull.test(user.getId())){
             System.out.println(user.getId());
             throw new ValidationException("User id must be NULL");

@@ -13,8 +13,8 @@ public class JsonConverter {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
     private JsonConverter(){
-
     }
+
     public static JsonConverter getInstance(){
         if (instance == null)
             instance = new JsonConverter();

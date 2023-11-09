@@ -2,8 +2,11 @@ jwt:
   header: Authorization
   # This token must be encoded using Base64 with mininum 88 Bits (you can type `echo 'secret-key'|base64` on your command line)
   base64-secret: c2VjcmV0LWtleQoc2VjcmV0LWtleQoc2VjcmV0LWtleQoc2VjcmV0LWtleQoc2VjcmV0LWtleQo=
-  # token is valid 24 hours
+  # token is valid 1 hour
   token-validity-in-seconds: 3600000
+springdoc:
+  swagger-ui:
+    path: /swagger-ui-wallet-service-api.html
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -11,6 +14,4 @@ spring:
     password: Aa123456
     url: jdbc:postgresql://localhost:54321/walletServiceDB
   liquibase:
-    change-log: db
-connection:
-   poolSize: 10
+    default-schema: migration

@@ -24,6 +24,9 @@ public class TransactionServiceImpl implements TransactionService {
      * Field contains a link to the object TransactionMemory
      */
     private final TransactionalRepository transactionDAO;
+    /**
+     * This field contains link to WalletDAO
+     */
     private final WalletDAO walletDAO;
 
 

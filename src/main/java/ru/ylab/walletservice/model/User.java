@@ -2,9 +2,8 @@ package ru.ylab.walletservice.model;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +12,12 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Class describes a user
+ * Class describes a user and implements UserDetails for auth
  */
-@NoArgsConstructor @AllArgsConstructor
-@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class User implements UserDetails {
 
